@@ -1,5 +1,5 @@
 import parent_import
-from ex03.FileLoader import FileLoader
+from ex00.FileLoader import FileLoader
 
 
 def count_medals(obj):
@@ -13,16 +13,17 @@ def count_medals(obj):
 
 
 def howManyMedalsByCountry(data, country_name):
-    name_mask = (data.Team == country_name)
-    by_name = data[name_mask] \
+    by_country = data[data.Team == country_name] \
         .filter(items=["Year", "Medal", "Team", "City", "Event"])\
         .drop_duplicates(subset=['Team', 'City', 'Event'], keep='last')
 
-    return by_name.pivot_table(
-        index="Year",
-        values="Medal",
-        aggfunc=count_medals
-    ).to_dict()["Medal"]
+    if len(by_country) > 0:
+        return by_country.pivot_table(
+            index="Year",
+            values="Medal",
+            aggfunc=count_medals
+        ).to_dict()["Medal"]
+    return {}
 
 
 if __name__ == "__main__":

@@ -15,11 +15,13 @@ def count_medals(obj):
 def howManyMedals(data, name):
     by_name = data[data.Name == name]
 
-    return by_name.pivot_table(
-        index="Year",
-        values="Medal",
-        aggfunc=count_medals
-    ).to_dict()["Medal"]
+    if len(by_name) > 0:
+        return by_name.pivot_table(
+            index="Year",
+            values="Medal",
+            aggfunc=count_medals
+        ).to_dict()["Medal"]
+    return {}
 
 
 def test_howManyMedals():

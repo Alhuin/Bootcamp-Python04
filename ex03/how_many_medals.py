@@ -1,40 +1,41 @@
 import parent_import
 from ex00.FileLoader import FileLoader
-from pprint import pprint
+
+
+def count_medals(obj):
+    medals = obj.value_counts().to_frame()["Medal"].to_dict()
+    dic = {"Gold": 0, "Silver": 0, "Bronze": 0}
+    dic.update(medals)
+    dic["G"] = dic.pop("Gold")
+    dic["S"] = dic.pop("Silver")
+    dic["B"] = dic.pop("Bronze")
+    return dic
 
 
 def howManyMedals(data, name):
-    ret = dict()
-    name_mask = (data.Name == name)
-    by_name = data[name_mask] \
-        .filter(items=["Year", "Medal"])
+    by_name = data[data.Name == name]
 
-    for idx, da in by_name.iterrows():
-        if da.Year not in ret:
-            ret[da.Year] = dict({'Gold': 0, 'Silver': 0, 'Bronze': 0})
-        if da.Medal in ["Gold", "Silver", "Bronze"]:
-            ret[da.Year][da.Medal] += 1
-    return ret
+    return by_name.pivot_table(
+        index="Year",
+        values="Medal",
+        aggfunc=count_medals
+    ).to_dict()["Medal"]
 
 
 def test_howManyMedals():
     loader = FileLoader()
-    data = loader.load("https://raw.githubusercontent.com/42-AI"
-                       "/bootcamp_python/master/day04/resources"
-                       "/athlete_events.csv")
+    data = loader.load('../data/athlete_events.csv')
 
     assert howManyMedals(data, 'Kjetil Andr Aamodt') == dict({
-        1992: {'Gold': 1, 'Silver': 0, 'Bronze': 1},
-        1994: {'Gold': 0, 'Silver': 2, 'Bronze': 1},
-        1998: {'Gold': 0, 'Silver': 0, 'Bronze': 0},
-        2002: {'Gold': 2, 'Silver': 0, 'Bronze': 0},
-        2006: {'Gold': 1, 'Silver': 0, 'Bronze': 0}
+        1992: {'G': 1, 'S': 0, 'B': 1},
+        1994: {'G': 0, 'S': 2, 'B': 1},
+        1998: {'G': 0, 'S': 0, 'B': 0},
+        2002: {'G': 2, 'S': 0, 'B': 0},
+        2006: {'G': 1, 'S': 0, 'B': 0}
     })
 
 
 if __name__ == "__main__":
     loader = FileLoader()
-    data = loader.load("https://raw.githubusercontent.com/42-AI"
-                       "/bootcamp_python/master/day04/resources"
-                       "/athlete_events.csv")
-    pprint(howManyMedals(data, 'Kjetil Andr Aamodt'))
+    data = loader.load('../data/athlete_events.csv')
+    print(howManyMedals(data, 'Kjetil Andr Aamodt'))

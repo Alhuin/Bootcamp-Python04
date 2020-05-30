@@ -1,5 +1,4 @@
 import parent_import
-import pandas as pd
 from ex00.FileLoader import FileLoader
 
 
@@ -18,7 +17,6 @@ def test_SpatioTemporalData():
     loader = FileLoader()
     data = loader.load('../data/athlete_events.csv')
     sp = SpatioTemporalData(data)
-    print(sp.data)
     assert sp.where(1896) == ['Athina']
     assert sp.where(2016) == ['Rio de Janeiro']
     assert sp.when('Athina') == [2004, 1906, 1896]

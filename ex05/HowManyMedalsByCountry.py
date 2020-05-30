@@ -14,7 +14,6 @@ def count_medals(obj):
 
 def howManyMedalsByCountry(data, country_name):
     by_country = data[data.Team == country_name] \
-        .filter(items=["Year", "Medal", "Team", "City", "Event"])\
         .drop_duplicates(subset=['Team', 'City', 'Event'], keep='last')
 
     if len(by_country) > 0:

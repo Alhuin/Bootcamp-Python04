@@ -16,9 +16,7 @@ def proportionBySport(data, year, sport, gender):
 
 def test_proportionBySport():
     loader = FileLoader()
-    data = loader.load("https://raw.githubusercontent.com/42-AI"
-                       "/bootcamp_python/master/day04/resources"
-                       "/athlete_events.csv")
+    data = loader.load('../data/athlete_events.csv')
     assert 0.01935634328358209 == proportionBySport(data, 2004, 'Tennis', 'F')
 
 

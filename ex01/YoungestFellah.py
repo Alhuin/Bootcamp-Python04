@@ -1,24 +1,17 @@
 import parent_import
+import numpy as np
 from ex00.FileLoader import FileLoader
 
 
-def youngestFellah(pandas_df, year):
-    year_mask = pandas_df.Year == year
-    by_year = pandas_df[year_mask]
-    male_mask = by_year.Sex == "M"
-
-    return {
-        'f': by_year[~male_mask].Age.min(),
-        'm': by_year[male_mask].Age.min(),
-    }
+def youngestFellah(data, year):
+    return data[data.Year == year].pivot_table(
+        index="Sex",
+        values="Age",
+        aggfunc=np.min
+    ).to_dict()["Age"]
 
 
 def test_youngestFellah():
     fl = FileLoader()
-    data = fl.load("https://raw.githubusercontent.com/42-AI"
-                   "/bootcamp_python/master/day04/resources"
-                   "/athlete_events.csv")
-
-    assert dict({'f': 13.0, 'm': 14.0}) == youngestFellah(data, 2004)
-
-
+    data = fl.load('../data/athlete_events.csv')
+    assert dict({'F': 13.0, 'M': 14.0}) == youngestFellah(data, 2004)

@@ -7,7 +7,7 @@ def howManyMedals(data, name):
     ret = dict()
     name_mask = (data.Name == name)
     by_name = data[name_mask] \
-        .filter(items=["Year", "Medal"]) \
+        .filter(items=["Year", "Medal"])
 
     for idx, da in by_name.iterrows():
         if da.Year not in ret:
